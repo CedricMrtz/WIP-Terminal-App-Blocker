@@ -1,12 +1,13 @@
 mod engine;
 mod rule;
 mod target;
+mod app;
 mod ui;
 
 use engine::Engine;
 use rule::{Rule, Action};
 use target::Target;
-use ui::App;
+use app::App;
 
 fn main() -> color_eyre::Result<()> {
     let rules = vec![
@@ -33,9 +34,12 @@ fn main() -> color_eyre::Result<()> {
         Action::Block => "Access Blocked",
     };
 
+    let mut app = App::new();
+    app.status_message = text.into(); 
+
     color_eyre::install()?;
     let terminal = ratatui::init();
-    App::new().run(terminal, text)?;
+    app.run(terminal)?;
     ratatui::restore();
     Ok(())
 }

@@ -16,8 +16,9 @@ pub enum Screen{
 #[derive(Debug, Default)]
 pub struct App {
     running: bool,
-    screen: Screen,
-    counter: u32,
+    pub screen: Screen,
+    pub counter: u32,
+    pub status_message: String,
 }
 
 impl App {
@@ -27,46 +28,18 @@ impl App {
     }
 
     /// Run the application's main loop.
-    pub fn run(mut self, mut terminal: DefaultTerminal, text: &str) -> color_eyre::Result<()> {
+    pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
         self.running = true;
         while self.running {
-            terminal.draw(|frame| self.render(frame, text))?;
+            terminal.draw(|frame| self.render(frame))?;
             self.handle_crossterm_events()?;
         }
         Ok(())
     }
 
-    ///widgets
-    fn render(&mut self, frame: &mut Frame, message: &str) {
-        match self.screen{
-            Screen::Main => self.render_main(frame, message),
-            Screen::Counter => self.render_counter(frame),
-        }
-    }
-    fn render_main(&self, frame: &mut Frame, message: &str){
-        let title = Line::from("Ratatui Simple Template")
-            .bold()
-            .blue()
-            .centered();
-        let text = message.to_string();
-        frame.render_widget(
-            Paragraph::new(text)
-                .block(Block::bordered().title(title))
-                .centered(),
-            frame.area(),
-        )
-    }
-    fn render_counter(&self, frame: &mut Frame){
-        let text = format!(
-            "Counter Screen\n\nPressed: {}\n\n[Enter] Increment\n[1] Back",
-            self.counter
-        );
-
-        frame.render_widget(
-            Paragraph::new(text)
-                .block(Block::bordered().title("Counter")),
-            frame.area(),
-        );
+    ///Render
+    fn render(&mut self, frame: &mut Frame) {
+        crate::ui::render(frame, self);
     }
 
     /// Reads the crossterm events and updates the state of [`App`].
