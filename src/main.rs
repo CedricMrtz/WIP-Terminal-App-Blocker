@@ -1,18 +1,12 @@
 mod engine;
 mod rule;
 mod target;
+mod ui;
 
 use engine::Engine;
 use rule::{Rule, Action};
 use target::Target;
-
-use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
-use ratatui::{
-    DefaultTerminal, Frame,
-    style::Stylize,
-    text::Line,
-    widgets::{Block, Paragraph},
-};
+use ui::App;
 
 fn main() -> color_eyre::Result<()> {
     let rules = vec![
@@ -30,7 +24,7 @@ fn main() -> color_eyre::Result<()> {
     
     let engine = Engine::new(rules);
 
-    let input = Target::App("firefox".into());
+    let input = Target::Website("youtube.com".into());
 
     let result = engine.check(&input);
 
@@ -41,81 +35,7 @@ fn main() -> color_eyre::Result<()> {
 
     color_eyre::install()?;
     let terminal = ratatui::init();
-    let result = App::new().run(terminal, text);
+    App::new().run(terminal, text)?;
     ratatui::restore();
-    result
-}
-
-/// The main application which holds the state and logic of the application.
-#[derive(Debug, Default)]
-pub struct App {
-    /// Is the application running?
-    running: bool,
-}
-
-impl App {
-    /// Construct a new instance of [`App`].
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Run the application's main loop.
-    pub fn run(mut self, mut terminal: DefaultTerminal, text: &str) -> color_eyre::Result<()> {
-        self.running = true;
-        while self.running {
-            terminal.draw(|frame| self.render(frame, text))?;
-            self.handle_crossterm_events()?;
-        }
-        Ok(())
-    }
-
-    /// Renders the user interface.
-    ///
-    /// This is where you add new widgets. See the following resources for more information:
-    ///
-    /// - <https://docs.rs/ratatui/latest/ratatui/widgets/index.html>
-    /// - <https://github.com/ratatui/ratatui/tree/main/ratatui-widgets/examples>
-    fn render(&mut self, frame: &mut Frame, message: &str) {
-        let title = Line::from("Ratatui Simple Template")
-            .bold()
-            .blue()
-            .centered();
-        let text = message.to_string();
-        frame.render_widget(
-            Paragraph::new(text)
-                .block(Block::bordered().title(title))
-                .centered(),
-            frame.area(),
-        )
-    }
-
-    /// Reads the crossterm events and updates the state of [`App`].
-    ///
-    /// If your application needs to perform work in between handling events, you can use the
-    /// [`event::poll`] function to check if there are any events available with a timeout.
-    fn handle_crossterm_events(&mut self) -> color_eyre::Result<()> {
-        match event::read()? {
-            // it's important to check KeyEventKind::Press to avoid handling key release events
-            Event::Key(key) if key.kind == KeyEventKind::Press => self.on_key_event(key),
-            Event::Mouse(_) => {}
-            Event::Resize(_, _) => {}
-            _ => {}
-        }
-        Ok(())
-    }
-
-    /// Handles the key events and updates the state of [`App`].
-    fn on_key_event(&mut self, key: KeyEvent) {
-        match (key.modifiers, key.code) {
-            (_, KeyCode::Esc | KeyCode::Char('q'))
-            | (KeyModifiers::CONTROL, KeyCode::Char('c') | KeyCode::Char('C')) => self.quit(),
-            // Add other key handlers here.
-            _ => {}
-        }
-    }
-
-    /// Set running to false to quit the application.
-    fn quit(&mut self) {
-        self.running = false;
-    }
+    Ok(())
 }
