@@ -7,8 +7,17 @@ use ratatui::{
 };
 
 #[derive(Debug, Default)]
+pub enum Screen{
+    #[default]
+    Main,
+    Counter
+}
+
+#[derive(Debug, Default)]
 pub struct App {
     running: bool,
+    screen: Screen,
+    counter: u32,
 }
 
 impl App {
@@ -27,13 +36,14 @@ impl App {
         Ok(())
     }
 
-    /// Renders the user interface.
-    ///
-    /// This is where you add new widgets. See the following resources for more information:
-    ///
-    /// - <https://docs.rs/ratatui/latest/ratatui/widgets/index.html>
-    /// - <https://github.com/ratatui/ratatui/tree/main/ratatui-widgets/examples>
+    ///widgets
     fn render(&mut self, frame: &mut Frame, message: &str) {
+        match self.screen{
+            Screen::Main => self.render_main(frame, message),
+            Screen::Counter => self.render_counter(frame),
+        }
+    }
+    fn render_main(&self, frame: &mut Frame, message: &str){
         let title = Line::from("Ratatui Simple Template")
             .bold()
             .blue()
@@ -45,6 +55,18 @@ impl App {
                 .centered(),
             frame.area(),
         )
+    }
+    fn render_counter(&self, frame: &mut Frame){
+        let text = format!(
+            "Counter Screen\n\nPressed: {}\n\n[Enter] Increment\n[1] Back",
+            self.counter
+        );
+
+        frame.render_widget(
+            Paragraph::new(text)
+                .block(Block::bordered().title("Counter")),
+            frame.area(),
+        );
     }
 
     /// Reads the crossterm events and updates the state of [`App`].
@@ -65,9 +87,15 @@ impl App {
     /// Handles the key events and updates the state of [`App`].
     fn on_key_event(&mut self, key: KeyEvent) {
         match (key.modifiers, key.code) {
+            // Quit
             (_, KeyCode::Esc | KeyCode::Char('q'))
             | (KeyModifiers::CONTROL, KeyCode::Char('c') | KeyCode::Char('C')) => self.quit(),
-            // Add other key handlers here.
+            // Navigation
+            (_, KeyCode::Char('1')) => self.screen = Screen::Main,
+            (_, KeyCode::Char('2')) => self.screen = Screen::Counter,
+            // Counter btn
+            (_, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
+
             _ => {}
         }
     }
