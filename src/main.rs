@@ -1,12 +1,10 @@
-mod engine;
-mod rule;
-mod target;
 mod app;
 mod ui;
+mod rules;
 
-use engine::Engine;
-use rule::{Rule, Action};
-use target::Target;
+use rules::engine::Engine;
+use rules::rule::{Rule, Action};
+use rules::target::Target;
 use app::App;
 
 fn main() -> color_eyre::Result<()> {

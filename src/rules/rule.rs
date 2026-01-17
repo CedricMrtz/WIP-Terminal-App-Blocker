@@ -1,4 +1,4 @@
-use crate::target::Target;
+use crate::rules::target::Target;
 
 #[derive(Debug, Clone)]
 pub enum Action{

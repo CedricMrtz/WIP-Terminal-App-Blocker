@@ -1,5 +1,5 @@
-use crate::target::Target;
-use crate::rule::{Rule, Action};
+use crate::rules::target::Target;
+use crate::rules::rule::{Rule, Action};
 
 pub struct Engine{
     rules: Vec<Rule>,
