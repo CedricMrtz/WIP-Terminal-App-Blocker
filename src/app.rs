@@ -1,9 +1,9 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
-    style::Stylize,
-    text::Line,
-    widgets::{Block, Paragraph},
+    // style::Stylize,
+    // text::Line,
+    // widgets::{Block, Paragraph},
 };
 
 #[derive(Debug, Default)]

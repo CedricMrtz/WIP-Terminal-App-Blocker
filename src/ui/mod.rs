@@ -1,6 +1,7 @@
 use ratatui::Frame;
 use crate::{App, app::Screen};
 
+pub mod components;
 pub mod main_screen;
 pub mod second_screen;
 
