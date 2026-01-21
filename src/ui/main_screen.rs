@@ -6,7 +6,7 @@ use ratatui::{
     text::{Line, Span},
 };
 use crate::app::App;
-use crate::ui::components::ascii;
+use crate::ui::components::{logo, rulesdescription, ruleslist};
 
 
 pub fn render_main(frame: &mut Frame, app: &App){
@@ -25,19 +25,32 @@ pub fn render_main(frame: &mut Frame, app: &App){
         let outer = Layout::default()
             .direction(Direction::Horizontal)
             .constraints([
-                Constraint::Min(8),
-                Constraint::Min(0),
+                Constraint::Percentage(40),
+                Constraint::Percentage(60),
             ])
             .split(inner);
 
-        ascii::render_logo(frame, outer[0]);
+        logo::render_logo(frame, outer[0]);
+
+        let info = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Percentage(33),
+                Constraint::Percentage(33),
+                Constraint::Percentage(34),
+            ])
+            .split(outer[1]);
+
+        ruleslist::render_ruleslist(frame, info[0], app);
+
+        rulesdescription::render_rulesdescription(frame, info[1], app);
 
         frame.render_widget(
-            Paragraph::new(app.status_message.as_str())
-                .block(Block::new().borders(Borders::ALL).title("Status"))
+            Paragraph::new("Info")
+                .block(Block::new().borders(Borders::ALL).title("Info 3"))
                 .alignment(Alignment::Left)
-                .style(Style::default().fg(Color::Yellow)),
-            outer[1],
+                .style(Style::default().fg(Color::Red)),
+            info[2],
         );
 
     }
