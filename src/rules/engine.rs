@@ -22,7 +22,7 @@ impl Engine {
     fn matches(rule_target: &Target, input: &Target) -> bool{
         match(rule_target, input){
             (Target::Website(a), Target::Website(b)) => a == b,
-            (Target::App(a), Target::App(b)) => a == b,
+            (Target::Application(a), Target::Application(b)) => a == b,
             _ => false,
         }
     }

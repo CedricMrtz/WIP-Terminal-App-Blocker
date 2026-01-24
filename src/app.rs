@@ -1,10 +1,8 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
-    // style::Stylize,
-    // text::Line,
-    // widgets::{Block, Paragraph},
 };
+use crate::rules::rule::{Rule};
 
 #[derive(Debug, Default)]
 pub enum Screen{
@@ -19,6 +17,7 @@ pub struct App {
     pub screen: Screen,
     pub counter: u32,
     pub status_message: String,
+    pub rules: Vec<Rule>,
 }
 
 impl App {

@@ -1,5 +1,5 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Target {
     Website(String),
-    App(String),
+    Application(String),
 }

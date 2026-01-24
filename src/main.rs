@@ -16,12 +16,12 @@ fn main() -> color_eyre::Result<()> {
         },
         Rule{
             name: "Allow firefox".into(),
-            target: Target::App("firefox".into()),
+            target: Target::Application("firefox".into()),
             action: Action::Allow,
         }
     ];
     
-    let engine = Engine::new(rules);
+    let engine = Engine::new(rules.clone());
 
     let input = Target::Website("youtube.com".into());
 
@@ -34,6 +34,7 @@ fn main() -> color_eyre::Result<()> {
 
     let mut app = App::new();
     app.status_message = text.into(); 
+    app.rules = rules.into();
 
     color_eyre::install()?;
     let terminal = ratatui::init();
