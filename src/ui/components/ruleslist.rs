@@ -6,7 +6,7 @@ use crate::app::App;
 pub fn render_ruleslist(frame: &mut Frame, area: Rect, app: &App){
     
         let lines: Vec<Line> = app.rules
-        .iter()
+        .iter() //Iter by reference
         .map(|r| Line::from(r.to_string()))
         .collect();
 
