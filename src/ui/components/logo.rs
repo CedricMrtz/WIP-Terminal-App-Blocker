@@ -1,5 +1,5 @@
 use ratatui::{
-    Frame, layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Modifier, Style}, symbols::block, text::{Line, Span}, widgets::{Block, Borders, Paragraph}
+    Frame, layout::{Rect}, style::{Color, Modifier, Style}, text::{Line, Span}, widgets::{Block, Borders, Paragraph}
 };
 
 pub fn render_logo(frame: &mut Frame, area: Rect){

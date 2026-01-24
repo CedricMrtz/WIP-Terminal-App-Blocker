@@ -2,8 +2,7 @@ use ratatui::{
     Frame,
     layout::{Layout, Direction, Constraint, Alignment},
     widgets::{Block, Borders, Paragraph},
-    style::{Style, Color, Modifier},
-    text::{Line, Span},
+    style::{Style, Color},
 };
 use crate::app::App;
 use crate::ui::components::{logo, rulesdescription, ruleslist};

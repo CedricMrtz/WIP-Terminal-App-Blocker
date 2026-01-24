@@ -1,9 +1,9 @@
 use ratatui::{
-    Frame, layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Modifier, Style}, symbols::block, text::{Line, Span}, widgets::{Block, Borders, Paragraph}
+    Frame, layout::{Alignment, Rect}, style::{Color, Style},  widgets::{Block, Borders, Paragraph}
 };
 use crate::app::App;
 
-pub fn render_rulesdescription(frame: &mut Frame, area: Rect, app: &App){
+pub fn render_rulesdescription(frame: &mut Frame, area: Rect, _app: &App){
         
         frame.render_widget(
             Paragraph::new("Info")
