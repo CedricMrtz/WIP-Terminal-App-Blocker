@@ -1,6 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
+    widgets::ListState,
 };
 use crate::rules::rule::{Rule};
 
@@ -18,13 +19,22 @@ pub struct App {
     pub counter: u32,
     pub status_message: String,
     pub rules: Vec<Rule>,
+    pub ruleslist_state: ListState,
 }
 
 impl App {
     /// Construct a new instance of [`App`].
     pub fn new() -> Self {
-        Self::default()
+        let mut state = ListState::default();
+        state.select(Some(0));
+
+        Self{
+            ruleslist_state: state,
+            ..Default::default()
+        }
     }
+
+
 
     /// Run the application's main loop.
     pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
@@ -65,11 +75,44 @@ impl App {
             // Navigation
             (_, KeyCode::Char('1')) => self.screen = Screen::Main,
             (_, KeyCode::Char('2')) => self.screen = Screen::Counter,
+            // Move arrows on ruleslist
+            (_, KeyCode::Up) if matches!(self.screen, Screen::Main) => self.rules_prev(),
+            (_, KeyCode::Down) if matches!(self.screen, Screen::Main) => self.rules_next(),
+
             // Counter btn
             (_, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
             _ => {}
-        }
+        };
+    }
+
+    // Helper for arrow navegation on ruleslist
+    fn rules_next(&mut self){
+        let i = match self.ruleslist_state.selected(){
+            Some(i) => {
+                if i>= self.rules.len()-1{
+                    i
+                }else{
+                    i+1
+                }
+            }
+            None =>0
+        };
+        self.ruleslist_state.select(Some(i));
+    }
+
+    fn rules_prev(&mut self){
+        let i = match self.ruleslist_state.selected(){
+            Some(i) =>{
+                if i==0{
+                    0
+                }else{
+                    i-1
+                }
+            }
+            None =>0
+        };
+        self.ruleslist_state.select(Some(i));
     }
 
     /// Set running to false to quit the application.
