@@ -10,17 +10,17 @@ pub enum Action{
 #[derive(Debug, Clone)]
 pub struct Rule {
     pub name: String,
-    pub target: Target,
+    pub target: Vec<Target>,
     pub action: Action,
+    pub description: Option<String>,
 }
 
 impl fmt::Display for Rule {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let target = match &self.target {
+        let targets: Vec<String> = self.target.iter().map(|t| match t {
             Target::Website(url) => format!("Website: {}", url),
             Target::Application(app) => format!("App: {}", app),
-        };
-
-        write!(f, "{} → {}", self.name, target)
+        }).collect();
+        write!(f, "{} → {}", self.name, targets.join(", "))
     }
 }

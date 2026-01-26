@@ -2,7 +2,7 @@ mod app;
 mod ui;
 mod rules;
 
-use rules::engine::Engine;
+// use rules::engine::Engine;
 use rules::rule::{Rule, Action};
 use rules::target::Target;
 use app::App;
@@ -10,27 +10,35 @@ use app::App;
 fn main() -> color_eyre::Result<()> {
     let rules = vec![
         Rule {
-            name: "Block Youtube".into(),
-            target: Target::Website("youtube.com".into()),
+            name: "Work focus".into(),
+            target: vec![
+                Target::Website("youtube.com".into()),
+                Target::Application("Steam".into())
+            ],
             action: Action::Block,
+            description: Some("Focus for working".into()),
         },
         Rule{
-            name: "Allow firefox".into(),
-            target: Target::Application("firefox".into()),
+            name: "Group 2".into(),
+            target: vec![
+                Target::Application("firefox".into()),
+            ],
             action: Action::Allow,
+            description: None,
         }
     ];
     
-    let engine = Engine::new(rules.clone());
+    // let engine = Engine::new(rules.clone());
 
-    let input = Target::Website("youtube.com".into());
+    // let input = Target::Website("youtube.com".into());
 
-    let result = engine.check(&input);
+    // let result = engine.check(&input);
 
-    let text = match result {
-        Action::Allow => "Access Allowed",
-        Action::Block => "Access Blocked",
-    };
+    // let text = match result {
+    //     Action::Allow => "Access Allowed",
+    //     Action::Block => "Access Blocked",
+    // };
+    let text: &str = "Feature yet to make";
 
     let mut app = App::new();
     app.status_message = text.into(); 

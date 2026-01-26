@@ -1,8 +1,8 @@
 use ratatui::{
-    Frame, layout::{Alignment, Rect},
+    Frame, layout::{Rect},
     style::{Color, Style, Modifier},
     text::{Line},
-    widgets::{Block, Borders, List, ListItem}
+    widgets::{Block, Borders, List}
 };
 use crate::app::App;
 
