@@ -4,8 +4,8 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph},
     style::{Style, Color},
 };
-use crate::app::App;
-use crate::ui::components::{logo, rulesdescription, ruleslist};
+use crate::{app::App, rules::rule};
+use crate::ui::components::{logo, rulesdescription, ruleslist, rulemanager};
 
 
 pub fn render_main(frame: &mut Frame, app: &App){
@@ -44,12 +44,6 @@ pub fn render_main(frame: &mut Frame, app: &App){
 
         rulesdescription::render_rulesdescription(frame, info[1], app);
 
-        frame.render_widget(
-            Paragraph::new("Info")
-                .block(Block::new().borders(Borders::ALL).title("Info 3"))
-                .alignment(Alignment::Left)
-                .style(Style::default().fg(Color::Red)),
-            info[2],
-        );
+        rulemanager::render_rulemanager(frame, info[2], app);
 
     }

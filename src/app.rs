@@ -20,6 +20,7 @@ pub struct App {
     pub status_message: String,
     pub rules: Vec<Rule>,
     pub ruleslist_state: ListState,
+    pub selected_rule: Option<Rule>,
 }
 
 impl App {
@@ -78,7 +79,8 @@ impl App {
             // Move arrows on ruleslist
             (_, KeyCode::Up) if matches!(self.screen, Screen::Main) => self.rules_prev(),
             (_, KeyCode::Down) if matches!(self.screen, Screen::Main) => self.rules_next(),
-
+            // Select rule
+            (_, KeyCode::Enter) if matches!(self.screen, Screen::Main) => self.select_rule(),
             // Counter btn
             (_, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
@@ -113,6 +115,13 @@ impl App {
             None =>0
         };
         self.ruleslist_state.select(Some(i));
+    }
+
+    fn select_rule(&mut self){
+        self.selected_rule = self.
+            ruleslist_state
+            .selected()
+            .and_then(|i| self.rules.get(i).cloned())
     }
 
     /// Set running to false to quit the application.
