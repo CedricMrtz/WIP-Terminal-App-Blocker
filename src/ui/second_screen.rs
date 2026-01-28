@@ -1,18 +1,15 @@
 use ratatui::{
-    Frame,
-    widgets::{Block, Paragraph},
+    Frame, layout::Alignment, widgets::{Block, Paragraph}
 };
 use crate::app::App;
 
-pub fn render_counter( frame: &mut Frame, app: &App){
-    let text = format!(
-        "Counter Screen\n\nPressed: {}\n\n[Enter] Increment\n[1] Back",
-        app.counter
-    );
+pub fn render_counter( frame: &mut Frame, _app: &App){
 
     frame.render_widget(
-        Paragraph::new(text)
-            .block(Block::bordered().title("Counter")),
+        Paragraph::new("AAA")
+            .block(Block::bordered()
+            .title("Configuration")
+            .title_alignment(Alignment::Center)),
         frame.area(),
     );
 }

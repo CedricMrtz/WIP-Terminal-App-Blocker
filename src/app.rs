@@ -23,7 +23,6 @@ pub struct App {
     running: bool,
     pub screen: Screen,
     pub focus: Focus,
-    pub counter: u32,
     pub status_message: String,
     pub rules: Vec<Rule>,
     pub selection: ListState,
@@ -86,10 +85,13 @@ impl App {
             // Move arrows on ruleslist
             (Screen::Main, Focus::RulesList,_ ,KeyCode::Up) => self.rules_prev(),
             (Screen::Main, Focus::RulesList,_ ,KeyCode::Down) => self.rules_next(self.rules.len()),
+            // Move arrows on rulemanager
+            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Up) => self.rules_prev(),
+            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Down) => self.rules_next(2),
             // Select rule
             (Screen::Main, Focus::RulesList,_ ,KeyCode::Enter) => self.select_rule(),
             // Counter btn
-            (Screen::Counter, _, _, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
+            // (Screen::Counter, _, _, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
             _ => {}
         };
