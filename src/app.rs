@@ -5,21 +5,28 @@ use ratatui::{
 };
 use crate::rules::rule::{Rule};
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum Screen{
     #[default]
     Main,
     Counter
+}
+#[derive(Debug, Default, Clone, Copy)]
+pub enum Focus{
+    #[default]
+    RulesList,
+    RuleManager,
 }
 
 #[derive(Debug, Default)]
 pub struct App {
     running: bool,
     pub screen: Screen,
+    pub focus: Focus,
     pub counter: u32,
     pub status_message: String,
     pub rules: Vec<Rule>,
-    pub ruleslist_state: ListState,
+    pub selection: ListState,
     pub selected_rule: Option<Rule>,
 }
 
@@ -30,7 +37,7 @@ impl App {
         state.select(Some(0));
 
         Self{
-            ruleslist_state: state,
+            selection: state,
             ..Default::default()
         }
     }
@@ -69,30 +76,30 @@ impl App {
 
     /// Handles the key events and updates the state of [`App`].
     fn on_key_event(&mut self, key: KeyEvent) {
-        match (key.modifiers, key.code) {
+        match (self.screen, self.focus, key.modifiers, key.code) {
             // Quit
-            (_, KeyCode::Esc | KeyCode::Char('q'))
-            | (KeyModifiers::CONTROL, KeyCode::Char('c') | KeyCode::Char('C')) => self.quit(),
+            (_, _, _, KeyCode::Esc | KeyCode::Char('q'))
+            | (_,_,KeyModifiers::CONTROL, KeyCode::Char('c'|'C')) => self.quit(),
             // Navigation
-            (_, KeyCode::Char('1')) => self.screen = Screen::Main,
-            (_, KeyCode::Char('2')) => self.screen = Screen::Counter,
+            (_, _, _, KeyCode::Char('1')) => self.screen = Screen::Main,
+            (_, _, _, KeyCode::Char('2')) => self.screen = Screen::Counter,
             // Move arrows on ruleslist
-            (_, KeyCode::Up) if matches!(self.screen, Screen::Main) => self.rules_prev(),
-            (_, KeyCode::Down) if matches!(self.screen, Screen::Main) => self.rules_next(),
+            (Screen::Main, Focus::RulesList,_ ,KeyCode::Up) => self.rules_prev(),
+            (Screen::Main, Focus::RulesList,_ ,KeyCode::Down) => self.rules_next(self.rules.len()),
             // Select rule
-            (_, KeyCode::Enter) if matches!(self.screen, Screen::Main) => self.select_rule(),
+            (Screen::Main, Focus::RulesList,_ ,KeyCode::Enter) => self.select_rule(),
             // Counter btn
-            (_, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
+            (Screen::Counter, _, _, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
             _ => {}
         };
     }
 
-    // Helper for arrow navegation on ruleslist
-    fn rules_next(&mut self){
-        let i = match self.ruleslist_state.selected(){
+    // Helper for arrow navegation on menus
+    fn rules_next(&mut self, menu_len: usize){
+        let i = match self.selection.selected(){
             Some(i) => {
-                if i>= self.rules.len()-1{
+                if i>= menu_len-1{
                     i
                 }else{
                     i+1
@@ -100,11 +107,11 @@ impl App {
             }
             None =>0
         };
-        self.ruleslist_state.select(Some(i));
+        self.selection.select(Some(i));
     }
 
     fn rules_prev(&mut self){
-        let i = match self.ruleslist_state.selected(){
+        let i = match self.selection.selected(){
             Some(i) =>{
                 if i==0{
                     0
@@ -114,12 +121,12 @@ impl App {
             }
             None =>0
         };
-        self.ruleslist_state.select(Some(i));
+        self.selection.select(Some(i));
     }
 
     fn select_rule(&mut self){
         self.selected_rule = self.
-            ruleslist_state
+            selection
             .selected()
             .and_then(|i| self.rules.get(i).cloned())
     }

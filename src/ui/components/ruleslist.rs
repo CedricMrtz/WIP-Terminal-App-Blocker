@@ -24,5 +24,5 @@ pub fn render_ruleslist(frame: &mut Frame, area: Rect, app: &App){
                 )
                 .highlight_symbol(">>> ");
 
-        frame.render_stateful_widget(list, area, &mut app.ruleslist_state.clone());
+        frame.render_stateful_widget(list, area, &mut app.selection.clone());
     }

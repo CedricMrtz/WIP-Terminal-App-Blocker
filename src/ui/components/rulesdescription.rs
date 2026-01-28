@@ -9,7 +9,7 @@ use crate::app::App;
 pub fn render_rulesdescription(frame: &mut Frame, area: Rect, app: &App){
         
         let selected_rule = app
-            .ruleslist_state
+            .selection
             .selected()
             .and_then(|i| app.rules.get(i));
 
