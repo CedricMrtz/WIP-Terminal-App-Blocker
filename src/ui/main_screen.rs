@@ -8,7 +8,7 @@ use crate::{app::App, rules::rule};
 use crate::ui::components::{logo, rulesdescription, ruleslist, rulemanager};
 
 
-pub fn render_main(frame: &mut Frame, app: &App){
+pub fn render_main(frame: &mut Frame, app: &mut App){
         let area = frame.area();
 
         let block = Block::default()

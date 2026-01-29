@@ -6,7 +6,7 @@ use ratatui::{
 };
 use crate::app::App;
 
-pub fn render_ruleslist(frame: &mut Frame, area: Rect, app: &App){
+pub fn render_ruleslist(frame: &mut Frame, area: Rect, app: &mut App){
     
         let items: Vec<Line> = app.rules
         .iter() //Iter by reference
@@ -24,5 +24,5 @@ pub fn render_ruleslist(frame: &mut Frame, area: Rect, app: &App){
                 )
                 .highlight_symbol(">>> ");
 
-        frame.render_stateful_widget(list, area, &mut app.selection.clone());
+        frame.render_stateful_widget(list, area, &mut app.rules_selection);
     }

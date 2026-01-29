@@ -1,7 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
-    widgets::ListState,
+    widgets::{List, ListState},
 };
 use crate::rules::rule::{Rule};
 
@@ -22,11 +22,13 @@ pub enum Focus{
 pub struct App {
     running: bool,
     pub screen: Screen,
-    pub focus: Focus,
     pub status_message: String,
     pub rules: Vec<Rule>,
-    pub selection: ListState,
     pub selected_rule: Option<Rule>,
+    // Movement by arrows
+    pub focus: Focus,
+    pub rules_selection: ListState,
+    pub editmenu_selection: ListState,
 }
 
 impl App {
@@ -36,7 +38,8 @@ impl App {
         state.select(Some(0));
 
         Self{
-            selection: state,
+            rules_selection: state.clone(),
+            editmenu_selection: state,
             ..Default::default()
         }
     }
@@ -99,7 +102,12 @@ impl App {
 
     // Helper for arrow navegation on menus
     fn rules_next(&mut self, menu_len: usize){
-        let i = match self.selection.selected(){
+        let selection = match self.focus {
+            Focus::RuleManager => &mut self.editmenu_selection,
+            Focus::RulesList => &mut self.rules_selection,
+        };
+
+        let i = match selection.selected(){
             Some(i) => {
                 if i>= menu_len-1{
                     i
@@ -109,11 +117,16 @@ impl App {
             }
             None =>0
         };
-        self.selection.select(Some(i));
+        selection.select(Some(i));
     }
 
     fn rules_prev(&mut self){
-        let i = match self.selection.selected(){
+        let selection = match self.focus {
+            Focus::RuleManager => &mut self.editmenu_selection,
+            Focus::RulesList => &mut self.rules_selection,
+        };
+
+        let i = match selection.selected(){
             Some(i) =>{
                 if i==0{
                     0
@@ -123,12 +136,13 @@ impl App {
             }
             None =>0
         };
-        self.selection.select(Some(i));
+        selection.select(Some(i));
     }
 
     fn select_rule(&mut self){
+        self.focus = Focus::RuleManager;
         self.selected_rule = self.
-            selection
+            rules_selection
             .selected()
             .and_then(|i| self.rules.get(i).cloned())
     }
