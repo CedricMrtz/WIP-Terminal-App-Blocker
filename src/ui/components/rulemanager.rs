@@ -58,7 +58,9 @@ pub fn render_rulemanager(frame: &mut Frame, area: Rect, app: &mut App){
                 editmenu[1]
             );
 
-            frame.render_stateful_widget(list, editmenu[0].union(editmenu[2]), &mut app.editmenu_selection);            
+            frame.render_stateful_widget(list,
+                editmenu[0].union(editmenu[2]),
+                &mut app.editmenu_selection);            
         }
 
     }

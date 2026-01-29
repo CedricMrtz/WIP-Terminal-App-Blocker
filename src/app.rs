@@ -80,7 +80,7 @@ impl App {
     fn on_key_event(&mut self, key: KeyEvent) {
         match (self.screen, self.focus, key.modifiers, key.code) {
             // Quit
-            (_, _, _, KeyCode::Esc | KeyCode::Char('q'))
+            (_, _, _, KeyCode::Char('q'))
             | (_,_,KeyModifiers::CONTROL, KeyCode::Char('c'|'C')) => self.quit(),
             // Navigation
             (_, _, _, KeyCode::Char('1')) => self.screen = Screen::Main,
@@ -91,8 +91,9 @@ impl App {
             // Move arrows on rulemanager
             (Screen::Main, Focus::RuleManager,_ ,KeyCode::Up) => self.rules_prev(),
             (Screen::Main, Focus::RuleManager,_ ,KeyCode::Down) => self.rules_next(2),
-            // Select rule
+            // Select and deselect rule
             (Screen::Main, Focus::RulesList,_ ,KeyCode::Enter) => self.select_rule(),
+            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Esc) => self.deselect_rule(),
             // Counter btn
             // (Screen::Counter, _, _, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
@@ -145,6 +146,11 @@ impl App {
             rules_selection
             .selected()
             .and_then(|i| self.rules.get(i).cloned())
+    }
+
+    fn deselect_rule(&mut self){
+        self.focus = Focus::RulesList;
+        self.selected_rule = None;
     }
 
     /// Set running to false to quit the application.
