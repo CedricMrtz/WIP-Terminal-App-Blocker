@@ -2,7 +2,7 @@ use ratatui::{
     Frame,
     layout::{Alignment, Rect, Layout, Direction, Constraint},
     style::{Color, Style},
-    widgets::{Block, Borders, Paragraph}
+    widgets::{Block, Borders, Paragraph, List, ListItem}
 };
 use crate::app::App;
 
@@ -18,6 +18,18 @@ pub fn render_rulemanager(frame: &mut Frame, area: Rect, app: &App){
             .title(title)
             .title_alignment(Alignment::Left)
             .style(Style::default().fg(Color::Red));
+
+        let options = vec![
+            ListItem::new("Edit").style(Style::default().fg(Color::Green)),
+            ListItem::new("Delete").style(Style::default().fg(Color::Green)),
+        ];
+
+        let list = List::new(options)
+            .block(Block::default())
+            .highlight_style(
+                Style::default()
+                    .bg(Color::Blue).fg(Color::White))
+            .highlight_symbol(">>> ");
 
         if title == "No rule selected"{
             frame.render_widget(
@@ -41,20 +53,12 @@ pub fn render_rulemanager(frame: &mut Frame, area: Rect, app: &App){
                 ])
                 .split(inner);
 
-            frame.render_widget(Paragraph::new("Edit")
-                .alignment(Alignment::Center)
-                .style(Style::default().fg(Color::Green)),
-            editmenu[0]);
-
             frame.render_widget(Block::new().
                 borders(Borders::TOP), 
                 editmenu[1]
             );
 
-            frame.render_widget(Paragraph::new("Delete")
-                .alignment(Alignment::Center)
-                .style(Style::default().fg(Color::Green)),
-            editmenu[2]);
+            frame.render_stateful_widget(list, editmenu[0].union(editmenu[2]), &mut app.selection.clone());            
         }
 
     }
