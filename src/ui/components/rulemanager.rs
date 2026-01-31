@@ -1,8 +1,8 @@
 use ratatui::{
     Frame,
-    layout::{Alignment, Rect, Layout, Direction, Constraint},
-    style::{Color, Style},
-    widgets::{Block, Borders, Paragraph, List, ListItem}
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    style::{Color, Modifier, Style, Stylize},
+    widgets::{Block, Borders, List, ListItem, Paragraph}
 };
 use crate::app::App;
 
@@ -28,7 +28,9 @@ pub fn render_rulemanager(frame: &mut Frame, area: Rect, app: &mut App){
             .block(Block::default())
             .highlight_style(
                 Style::default()
-                    .bg(Color::Blue).fg(Color::White))
+                    .bg(Color::Black)
+                    .fg(Color::Yellow))
+                    .add_modifier(Modifier::BOLD)
             .highlight_symbol(">>> ");
 
         if title == "No rule selected"{

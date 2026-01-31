@@ -44,8 +44,6 @@ impl App {
         }
     }
 
-
-
     /// Run the application's main loop.
     pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
         self.running = true;
