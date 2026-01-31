@@ -3,7 +3,7 @@ use ratatui::{
 };
 use crate::app::App;
 
-pub fn render_counter( frame: &mut Frame, _app: &App){
+pub fn render_configuration( frame: &mut Frame, _app: &App){
 
     frame.render_widget(
         Paragraph::new("AAA")

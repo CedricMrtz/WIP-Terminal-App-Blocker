@@ -9,13 +9,20 @@ use crate::rules::rule::{Rule};
 pub enum Screen{
     #[default]
     Main,
-    Counter
+    Configuration
 }
 #[derive(Debug, Default, Clone, Copy)]
 pub enum Focus{
     #[default]
     RulesList,
     RuleManager,
+}
+#[derive(Debug, Default, Clone, Copy)]
+pub enum Modal{
+    #[default]
+    None,
+    EditRule,
+    DeleteRule,
 }
 
 #[derive(Debug, Default)]
@@ -25,6 +32,7 @@ pub struct App {
     pub status_message: String,
     pub rules: Vec<Rule>,
     pub selected_rule: Option<Rule>,
+    pub selected_modal: Modal,
     // Movement by arrows
     pub focus: Focus,
     pub rules_selection: ListState,
@@ -76,22 +84,30 @@ impl App {
 
     /// Handles the key events and updates the state of [`App`].
     fn on_key_event(&mut self, key: KeyEvent) {
-        match (self.screen, self.focus, key.modifiers, key.code) {
+        match (self.screen, self.focus, self.selected_modal, key.modifiers, key.code) {
             // Quit
-            (_, _, _, KeyCode::Char('q'))
-            | (_,_,KeyModifiers::CONTROL, KeyCode::Char('c'|'C')) => self.quit(),
-            // Navigation
-            (_, _, _, KeyCode::Char('1')) => self.screen = Screen::Main,
-            (_, _, _, KeyCode::Char('2')) => self.screen = Screen::Counter,
+            (_, _, _,_, KeyCode::Char('q'))
+            | (_,_,_,KeyModifiers::CONTROL, KeyCode::Char('c'|'C')) => self.quit(),
+            // Screen Navigation
+            (_, _, _, _, KeyCode::Char('1')) => self.screen = Screen::Main,
+            (_, _, _, _, KeyCode::Char('2')) => self.screen = Screen::Configuration,
             // Move arrows on ruleslist
-            (Screen::Main, Focus::RulesList,_ ,KeyCode::Up) => self.rules_prev(),
-            (Screen::Main, Focus::RulesList,_ ,KeyCode::Down) => self.rules_next(self.rules.len()),
+            (Screen::Main, Focus::RulesList,Modal::None,_ ,KeyCode::Up) => self.rules_prev(),
+            (Screen::Main, Focus::RulesList,Modal::None,_ ,KeyCode::Down) => self.rules_next(self.rules.len()),
             // Move arrows on rulemanager
-            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Up) => self.rules_prev(),
-            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Down) => self.rules_next(2),
-            // Select and deselect rule
-            (Screen::Main, Focus::RulesList,_ ,KeyCode::Enter) => self.select_rule(),
-            (Screen::Main, Focus::RuleManager,_ ,KeyCode::Esc) => self.deselect_rule(),
+            (Screen::Main, Focus::RuleManager,Modal::None,_ ,KeyCode::Up) => self.rules_prev(),
+            (Screen::Main, Focus::RuleManager,Modal::None,_ ,KeyCode::Down) => self.rules_next(2),
+            // Select and deselect rule manager
+            (Screen::Main, Focus::RulesList,Modal::None,_ ,KeyCode::Enter) => self.select_rule(),
+            (Screen::Main, Focus::RuleManager,Modal::None,_ ,KeyCode::Esc) => self.deselect_rule(),
+            // Select modal for edit or delete
+            (Screen::Main, Focus::RuleManager,Modal::None, _, KeyCode::Enter) => {self.selected_modal = match self.editmenu_selection.selected(){
+                Some(0) => Modal::EditRule,
+                Some(1) => Modal::DeleteRule,
+                _ => Modal::None,
+            }},
+            (Screen::Main, Focus::RuleManager,Modal::EditRule, _, KeyCode::Esc) => {self.selected_modal = Modal::None},
+            (Screen::Main, Focus::RuleManager,Modal::DeleteRule, _, KeyCode::Esc) => {self.selected_modal = Modal::None},
             // Counter btn
             // (Screen::Counter, _, _, KeyCode::Enter) if matches!(self.screen, Screen::Counter) => self.counter += 1,
 
