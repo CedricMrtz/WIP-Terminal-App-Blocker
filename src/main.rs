@@ -18,6 +18,7 @@ fn main() -> color_eyre::Result<()> {
             action: Action::Block,
             description: Some("Focus for working".into()),
             time_permitted: 100,
+            time_remaining: 100,
         },
         Rule{
             name: "Group 2".into(),
@@ -27,6 +28,7 @@ fn main() -> color_eyre::Result<()> {
             action: Action::Allow,
             description: None,
             time_permitted: 0,
+            time_remaining: 0,
         }
     ];
     

@@ -14,6 +14,7 @@ pub struct Rule {
     pub action: Action,
     pub description: Option<String>,
     pub time_permitted: u32,
+    pub time_remaining: u32,
 }
 
 impl fmt::Display for Rule {

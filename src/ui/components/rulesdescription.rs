@@ -44,6 +44,12 @@ pub fn render_rulesdescription(frame: &mut Frame, area: Rect, app: &App){
                     .map(|d| d.as_str())
                     .unwrap_or("No description provided")
             ),
+            format!(
+                "\nTime remaining: {} minutes",
+                selected_rule
+                    .map(|r| r.time_remaining)
+                    .unwrap_or(0)
+            ),
         ];
         
         frame.render_widget(
