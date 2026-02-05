@@ -1,7 +1,7 @@
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use ratatui::{
     DefaultTerminal, Frame,
-    widgets::{List, ListState},
+    widgets::{ListState},
 };
 use crate::rules::rule::{Rule};
 

@@ -1,10 +1,9 @@
 use ratatui::{
     Frame,
     layout::{Layout, Direction, Constraint, Alignment, Rect},
-    widgets::{Block, Borders, Paragraph, List, ListItem},
-    style::{Style, Color},
+    widgets::{Block, Borders, Paragraph},
 };
-use crate::{app::App, rules::rule};
+use crate::{app::App};
 use crate::ui::{main_screen};
 
 
