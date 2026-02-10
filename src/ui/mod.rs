@@ -5,13 +5,18 @@ pub mod components;
 pub mod main_screen;
 pub mod configuration_screen;
 pub mod edit_modal;
+pub mod delete_modal;
 
 pub fn render(frame: &mut Frame, app: &mut App) {
     
-    match (app.screen, app.selected_modal) {
-        (Screen::Main, Modal::None) => main_screen::render_main(frame, app),
-        (Screen::Configuration, Modal::None) => configuration_screen::render_configuration(frame, app),
-        (Screen::Main, Modal::EditRule) => edit_modal::render_edit_modal(frame, app),
+    match app.screen {
+        Screen::Main => main_screen::render_main(frame, app),
+        Screen::Configuration => configuration_screen::render_configuration(frame, app),
+    }
+
+    match app.selected_modal{
+        Modal::EditRule => edit_modal::render_edit_modal(frame, app),
+        Modal::DeleteRule => delete_modal::render_delete_modal(frame, app),
         _ => {}
     }
 }

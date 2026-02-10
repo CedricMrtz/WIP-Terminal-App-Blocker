@@ -7,14 +7,13 @@ use ratatui::{
 };
 use crate::{app::App};
 
-
-pub fn render_edit_modal(frame: &mut Frame, app: &mut App){
+pub fn render_delete_modal(frame: &mut Frame, app: &mut App){
     let area = centered_rect(40, 30, frame.size());
     
     let mut overlay = Buffer::empty(area);
     
     let block = Block::new()
-        .title("Edit Rule")
+        .title("Delete Rule")
         .borders(Borders::ALL)
         .border_style(Style::default().fg(Color::Red));
 
